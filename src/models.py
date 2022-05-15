@@ -6,19 +6,22 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from eralchemy import render_er
-
+#usando Sql Alchemist para hacer consultas
 Base = declarative_base()
+#Estoy declarando mi base de datos.
+#El primer paso es declarar nuestro modelo de user.
 
 class User(Base):
-    __tablename__ = 'user'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    username = Column(String(250), nullable=False)
+    # Aquí definimos el nombre de la tabla user.
+    __tablename__ = 'user'                                      #En SQL Alquemist el nombre mi tabla debe ir en minuscula
+    # Aquí definimos mis parametros de mi tabla.
+    # Ten en cuenta que cada columna es también un atributo normal de primera instancia de Pyth
+    id = Column(Integer, primary_key=True)                      #declaro esta como mi clave primaria
+    username = Column(String(250), nullable=False)              #declaro la columna username
     firstname = Column(String(250), nullable=False)
     lastname = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False, unique=True)
-    def to_dict(self):
+    def to_dict(self):                                          #defino el dictionary de mi clase para que le asigne las propiedades a mi objeto
         return {
             "id": self.id,
             "username": self.username,
@@ -28,6 +31,7 @@ class User(Base):
         }
 
 class Post(Base):
+    #estoy creando una clase post que hereda el ID de mi tabla User y el ID de mi tabla Comment
     __tablename__ = 'post'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
@@ -40,19 +44,21 @@ class Post(Base):
         }
     
 class MediaType(enum.Enum):
+    #esta funcion me permite trabajar con tipo de dato enum en mi clase media.
     imagen=1
     video=2
     galeria=3
-
+    
 class Media(Base):
+    #estoy creando una tabla media que hereda el ID de mi tabla Post
     __tablename__ = 'media'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    type = Column('type',Enum(MediaType))
+    type = Column('type',Enum(MediaType))                                       #este tipo de dato me permite escoger en tre imagen video o galeria
     url = Column(String(250))
-    post_id = Column(Integer, ForeignKey('post.id'))
-    post = relationship(Post)
+    post_id = Column(Integer, ForeignKey('post.id'))                            #estoy indicando que mi clave post id se relaciona con la clave id de post
+    post = relationship(Post)                                                   #estoy relacionando la variable post  de la clase Post en mi clase Media.
     
     def to_dict(self):
         return {
@@ -63,6 +69,7 @@ class Media(Base):
         }
 
 class Comment(Base):
+    #estoy creando una tabla commment que esta heredando el ID del User y el ID del Post
     __tablename__ = 'comment'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
@@ -82,6 +89,7 @@ class Comment(Base):
         }
     
 class Follower(Base):
+    #estoy creando una tabla Follower que esta heredando el ID del usuario y las estoy ingresando en mis dos parametros de mi tabla.
     __tablename__ = 'follower'
     id= Column (Integer, primary_key=True)
     user_from_id = Column(Integer, ForeignKey('user.id'))
